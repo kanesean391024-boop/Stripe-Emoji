@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pay with Emoji</title>
+  <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+  <button onclick="pay('🔥')">Pay $5 with 🔥</button>
+  <button onclick="pay('👍')">Pay $1 with 👍</button>
+
+  <script>
+    const stripe = Stripe('pk_test_...'); // Your publishable key
+
+    async function pay(emoji) {
+      const res = await fetch('/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emoji }),
+      });
+      const { id } = await res.json();
+      stripe.redirectToCheckout({ sessionId: id });
+    }
+  </script>
+</body>
+</html>
